@@ -1,0 +1,43 @@
+func isValidSudoku(board [][]byte) bool {
+    // Создаём структуры для хранения уже встреченных элементов
+    rows := make([]map[byte]struct{}, 9)
+    cols := make([]map[byte]struct{}, 9)
+    boxes := make([]map[byte]struct{}, 9)
+
+    for i := 0; i < 9; i++ {
+        rows[i] = make(map[byte]struct{})
+        cols[i] = make(map[byte]struct{})
+        boxes[i] = make(map[byte]struct{})
+    }
+
+    // Проходим по всем элементам доски
+    for i := 0; i < 9; i++ {
+        for j := 0; j < 9; j++ {
+            val := board[i][j]
+            if val == '.' {
+                continue // Пропускаем пустые ячейки
+            }
+
+            // Проверка строки
+            if _, exists := rows[i][val]; exists {
+                return false
+            }
+            rows[i][val] = struct{}{}
+
+            // Проверка столбца
+            if _, exists := cols[j][val]; exists {
+                return false
+            }
+            cols[j][val] = struct{}{}
+
+            // Проверка 3×3 блока
+            boxIndex := (i/3)*3 + j/3
+            if _, exists := boxes[boxIndex][val]; exists {
+                return false
+            }
+            boxes[boxIndex][val] = struct{}{}
+        }
+    }
+
+    return true
+}
